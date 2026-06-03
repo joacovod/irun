@@ -6,6 +6,7 @@ const emptyState = document.querySelector("#empty-state");
 const totalDistance = document.querySelector("#total-distance");
 const totalRuns = document.querySelector("#total-runs");
 const favoriteCircuit = document.querySelector("#favorite-circuit");
+const averagePace = document.querySelector("#average-pace");
 const filterTabs = Array.from(document.querySelectorAll(".filter-tab"));
 
 const API_URL = "/api/runs";
@@ -40,6 +41,28 @@ function formatDate(value) {
 function formatKm(value) {
   const number = Number(value) || 0;
   return `${number.toLocaleString("es-AR", { maximumFractionDigits: 1 })} km`;
+}
+
+function formatMinutes(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? `${Math.round(number)} min` : "Sin tiempo";
+}
+
+function formatPace(minutes, kilometers) {
+  const duration = Number(minutes);
+  const distance = Number(kilometers);
+
+  if (!Number.isFinite(duration) || !Number.isFinite(distance) || duration <= 0 || distance <= 0) {
+    return "-";
+  }
+
+  const pace = duration / distance;
+  const wholeMinutes = Math.floor(pace);
+  const seconds = Math.round((pace - wholeMinutes) * 60);
+  const adjustedMinutes = seconds === 60 ? wholeMinutes + 1 : wholeMinutes;
+  const adjustedSeconds = seconds === 60 ? 0 : seconds;
+
+  return `${adjustedMinutes}:${String(adjustedSeconds).padStart(2, "0")} min/km`;
 }
 
 function setStatus(text, type = "ok") {
@@ -81,11 +104,15 @@ function render() {
   const sorted = sortRuns(runs);
   const filtered = activeFilter === "todos" ? sorted : sorted.filter((run) => run.circuit === activeFilter);
   const total = runs.reduce((sum, run) => sum + Number(run.distanceKm || 0), 0);
+  const timedRuns = runs.filter((run) => Number(run.durationMinutes) > 0 && Number(run.distanceKm) > 0);
+  const timedDistance = timedRuns.reduce((sum, run) => sum + Number(run.distanceKm || 0), 0);
+  const totalMinutes = timedRuns.reduce((sum, run) => sum + Number(run.durationMinutes || 0), 0);
   const mountainCount = runs.filter((run) => run.circuit === "montana").length;
   const streetCount = runs.filter((run) => run.circuit === "calle").length;
 
   totalDistance.textContent = formatKm(total);
   totalRuns.textContent = String(runs.length);
+  averagePace.textContent = formatPace(totalMinutes, timedDistance);
   favoriteCircuit.textContent = mountainCount === streetCount
     ? runs.length ? "Empate" : "-"
     : mountainCount > streetCount ? "Montana" : "Calle";
@@ -109,7 +136,10 @@ function render() {
     title.textContent = `${circuitLabel(run.circuit)} - ${formatDate(run.date)}`;
 
     const note = document.createElement("span");
-    note.textContent = run.note ? run.note : "Salida registrada en equipo";
+    const details = [formatMinutes(run.durationMinutes), formatPace(run.durationMinutes, run.distanceKm)]
+      .filter((detail) => detail !== "-")
+      .join(" - ");
+    note.textContent = run.note ? `${run.note} - ${details}` : details;
 
     const distance = document.createElement("div");
     distance.className = "run-distance";
@@ -162,9 +192,15 @@ form.addEventListener("submit", async (event) => {
 
   const data = new FormData(form);
   const distanceKm = Number(String(data.get("distance")).replace(",", "."));
+  const durationMinutes = Number(String(data.get("duration")).replace(",", "."));
 
   if (!Number.isFinite(distanceKm) || distanceKm <= 0) {
     showToast("La distancia tiene que ser mayor a cero.");
+    return;
+  }
+
+  if (!Number.isFinite(durationMinutes) || durationMinutes <= 0) {
+    showToast("El tiempo tiene que ser mayor a cero.");
     return;
   }
 
@@ -172,6 +208,7 @@ form.addEventListener("submit", async (event) => {
     id: crypto.randomUUID(),
     date: String(data.get("date")),
     distanceKm: Math.round(distanceKm * 10) / 10,
+    durationMinutes: Math.round(durationMinutes),
     circuit: normalizeCircuit(String(data.get("circuit"))),
     note: String(data.get("note") || "").trim(),
     createdAt: new Date().toISOString()

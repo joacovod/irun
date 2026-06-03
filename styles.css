@@ -301,7 +301,8 @@ legend {
 input[type="date"],
 input[type="number"],
 input[type="text"],
-.distance-field {
+.distance-field,
+.unit-field {
   width: 100%;
   min-height: 52px;
   border: 2px solid rgba(38, 50, 56, 0.2);
@@ -323,19 +324,26 @@ button:focus-visible,
   outline-offset: 2px;
 }
 
-.distance-field {
+.distance-field,
+.unit-field {
   display: flex;
   align-items: center;
   overflow: hidden;
 }
 
-.distance-field input {
+.distance-field input,
+.unit-field input {
+  width: 0;
+  min-width: 0;
   min-height: 48px;
+  flex: 1;
   border: 0;
   outline: 0;
 }
 
-.distance-field strong {
+.distance-field strong,
+.unit-field strong {
+  flex: 0 0 auto;
   padding: 0 14px;
   color: var(--mint-dark);
 }
@@ -429,7 +437,7 @@ fieldset {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-top: 16px;
 }

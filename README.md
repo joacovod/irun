@@ -1,6 +1,6 @@
 # Kilometros en Equipo
 
-PWA familiar para anotar salidas con fecha, distancia y circuito: `montana` o `calle`.
+PWA familiar para anotar salidas con fecha, distancia, tiempo y circuito: `montana` o `calle`.
 
 La app esta pensada para:
 
@@ -95,5 +95,5 @@ En Android:
 ## Notas
 
 - Si Netlify muestra `Modo local`, falta configurar alguna variable de GitHub o el token no tiene permiso de escritura.
-- Cada salida se guarda con `id`, `date`, `distanceKm`, `circuit`, `note` y `createdAt`.
+- Cada salida se guarda con `id`, `date`, `distanceKm`, `durationMinutes`, `circuit`, `note` y `createdAt`.
 - Si dos personas guardan exactamente al mismo tiempo, GitHub puede rechazar una escritura por conflicto. En ese caso, alcanza con volver a guardar.

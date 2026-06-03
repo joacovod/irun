@@ -76,6 +76,7 @@ function sanitizeRuns(value) {
       id: String(run.id || ""),
       date: String(run.date || ""),
       distanceKm: Number(run.distanceKm),
+      durationMinutes: Number(run.durationMinutes || 0),
       circuit: run.circuit === "montana" ? "montana" : "calle",
       note: String(run.note || "").slice(0, 90),
       createdAt: String(run.createdAt || "")
@@ -115,6 +116,7 @@ async function writeRuns(config, runs, sha) {
 function validateRun(payload) {
   const date = String(payload.date || "");
   const distanceKm = Number(payload.distanceKm);
+  const durationMinutes = Number(payload.durationMinutes);
   const circuit = payload.circuit === "montana" ? "montana" : payload.circuit === "calle" ? "calle" : "";
   const note = String(payload.note || "").trim().slice(0, 90);
   const id = String(payload.id || randomUUID());
@@ -128,6 +130,10 @@ function validateRun(payload) {
     return { error: "La distancia tiene que estar entre 0 y 300 km." };
   }
 
+  if (!Number.isFinite(durationMinutes) || durationMinutes <= 0 || durationMinutes > 1440) {
+    return { error: "El tiempo tiene que estar entre 1 y 1440 minutos." };
+  }
+
   if (!circuit) {
     return { error: "El circuito tiene que ser montana o calle." };
   }
@@ -137,6 +143,7 @@ function validateRun(payload) {
       id,
       date,
       distanceKm: Math.round(distanceKm * 10) / 10,
+      durationMinutes: Math.round(durationMinutes),
       circuit,
       note,
       createdAt
