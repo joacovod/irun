@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#1f9a8a">
+    <title>Kilometros en Equipo</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="app-title">
+        <div class="hero-art" aria-hidden="true">
+          <div class="sun"></div>
+          <div class="cloud cloud-one"></div>
+          <div class="cloud cloud-two"></div>
+          <div class="hill hill-back"></div>
+          <div class="hill hill-front"></div>
+          <div class="road"></div>
+          <div class="runner runner-a"></div>
+          <div class="runner runner-b"></div>
+          <div class="runner runner-c"></div>
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow">Nuestro diario de aventuras</p>
+          <h1 id="app-title">Kilometros en Equipo</h1>
+          <p>Guardamos cada salida, sumamos distancia y vemos por donde corrimos juntas.</p>
+        </div>
+      </section>
+
+      <section class="panel entry-panel" aria-labelledby="form-title">
+        <div class="panel-heading">
+          <h2 id="form-title">Nueva salida</h2>
+          <span id="sync-status" class="status-pill">Conectando...</span>
+        </div>
+
+        <form id="run-form" class="run-form">
+          <label>
+            <span>Fecha</span>
+            <input id="date" name="date" type="date" required>
+          </label>
+
+          <label>
+            <span>Distancia</span>
+            <div class="distance-field">
+              <input id="distance" name="distance" type="number" min="0.1" step="0.1" inputmode="decimal" placeholder="3.5" required>
+              <strong>km</strong>
+            </div>
+          </label>
+
+          <fieldset>
+            <legend>Circuito</legend>
+            <div class="route-options">
+              <label class="route-card" aria-label="Circuito montana">
+                <input type="radio" name="circuit" value="montana" required>
+                <span class="route-icon mountain-icon" aria-hidden="true"></span>
+                <strong>Montana</strong>
+              </label>
+              <label class="route-card" aria-label="Circuito calle">
+                <input type="radio" name="circuit" value="calle" required>
+                <span class="route-icon street-icon" aria-hidden="true"></span>
+                <strong>Calle</strong>
+              </label>
+            </div>
+          </fieldset>
+
+          <label>
+            <span>Nota opcional</span>
+            <input id="note" name="note" type="text" maxlength="90" placeholder="Ej: con merienda al final">
+          </label>
+
+          <button class="primary-button" type="submit">
+            <span aria-hidden="true">+</span>
+            Guardar salida
+          </button>
+        </form>
+      </section>
+
+      <section class="stats-grid" aria-label="Resumen">
+        <article class="stat-card">
+          <span>Total</span>
+          <strong id="total-distance">0 km</strong>
+        </article>
+        <article class="stat-card">
+          <span>Salidas</span>
+          <strong id="total-runs">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Favorito</span>
+          <strong id="favorite-circuit">-</strong>
+        </article>
+      </section>
+
+      <section class="panel log-panel" aria-labelledby="log-title">
+        <div class="panel-heading">
+          <h2 id="log-title">Bitacora</h2>
+          <div class="filter-tabs" role="tablist" aria-label="Filtrar circuito">
+            <button type="button" class="filter-tab active" data-filter="todos">Todo</button>
+            <button type="button" class="filter-tab" data-filter="montana">Montana</button>
+            <button type="button" class="filter-tab" data-filter="calle">Calle</button>
+          </div>
+        </div>
+        <div id="empty-state" class="empty-state">
+          <div class="empty-art" aria-hidden="true"></div>
+          <p>Todavia no hay salidas. La primera queda con lugar de honor.</p>
+        </div>
+        <ol id="run-list" class="run-list"></ol>
+      </section>
+    </main>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
