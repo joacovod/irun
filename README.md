@@ -96,4 +96,5 @@ En Android:
 
 - Si Netlify muestra `Modo local`, falta configurar alguna variable de GitHub o el token no tiene permiso de escritura.
 - Cada salida se guarda con `id`, `date`, `distanceKm`, `durationMinutes`, `circuit`, `note` y `createdAt`.
+- Cada salida de la bitacora puede editarse desde el boton `Editar`.
 - Si dos personas guardan exactamente al mismo tiempo, GitHub puede rechazar una escritura por conflicto. En ese caso, alcanza con volver a guardar.

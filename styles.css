@@ -562,6 +562,42 @@ fieldset {
   white-space: nowrap;
 }
 
+.run-actions {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.edit-button,
+.secondary-button {
+  min-height: 38px;
+  border: 2px solid rgba(38, 50, 56, 0.14);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--mint-dark);
+  font-weight: 900;
+}
+
+.edit-button {
+  padding: 0 12px;
+}
+
+.secondary-button {
+  padding: 0 16px;
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-actions .primary-button {
+  grid-column: auto;
+}
+
 .toast {
   position: fixed;
   left: 50%;
@@ -639,7 +675,12 @@ fieldset {
     grid-template-columns: auto 1fr;
   }
 
-  .run-distance {
+  .run-actions {
     grid-column: 2;
+    justify-items: start;
+  }
+
+  .form-actions {
+    grid-template-columns: 1fr;
   }
 }

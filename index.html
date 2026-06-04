@@ -78,10 +78,13 @@
             <input id="note" name="note" type="text" maxlength="90" placeholder="Ej: con merienda al final">
           </label>
 
-          <button class="primary-button" type="submit">
-            <span aria-hidden="true">+</span>
-            Guardar salida
-          </button>
+          <div class="form-actions">
+            <button id="save-button" class="primary-button" type="submit">
+              <span aria-hidden="true">+</span>
+              Guardar salida
+            </button>
+            <button id="cancel-edit" class="secondary-button hidden" type="button">Cancelar edicion</button>
+          </div>
         </form>
       </section>
 

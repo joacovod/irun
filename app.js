@@ -1,5 +1,10 @@
 const form = document.querySelector("#run-form");
 const dateInput = document.querySelector("#date");
+const distanceInput = document.querySelector("#distance");
+const durationInput = document.querySelector("#duration");
+const noteInput = document.querySelector("#note");
+const saveButton = document.querySelector("#save-button");
+const cancelEditButton = document.querySelector("#cancel-edit");
 const statusPill = document.querySelector("#sync-status");
 const list = document.querySelector("#run-list");
 const emptyState = document.querySelector("#empty-state");
@@ -13,6 +18,7 @@ const API_URL = "/api/runs";
 const LOCAL_KEY = "kilometros-en-equipo:runs";
 let runs = [];
 let activeFilter = "todos";
+let editingRunId = null;
 
 dateInput.valueAsDate = new Date();
 
@@ -100,6 +106,33 @@ function sortRuns(items) {
   });
 }
 
+function resetFormMode() {
+  editingRunId = null;
+  form.reset();
+  dateInput.valueAsDate = new Date();
+  saveButton.innerHTML = '<span aria-hidden="true">+</span>Guardar salida';
+  cancelEditButton.classList.add("hidden");
+}
+
+function startEdit(runId) {
+  const run = runs.find((item) => item.id === runId);
+  if (!run) return;
+
+  editingRunId = run.id;
+  dateInput.value = run.date;
+  distanceInput.value = run.distanceKm;
+  durationInput.value = Number(run.durationMinutes) > 0 ? run.durationMinutes : "";
+  noteInput.value = run.note || "";
+
+  const circuitInput = form.querySelector(`input[name="circuit"][value="${run.circuit}"]`);
+  if (circuitInput) circuitInput.checked = true;
+
+  saveButton.innerHTML = '<span aria-hidden="true">*</span>Guardar cambios';
+  cancelEditButton.classList.remove("hidden");
+  form.scrollIntoView({ behavior: "smooth", block: "start" });
+  distanceInput.focus();
+}
+
 function render() {
   const sorted = sortRuns(runs);
   const filtered = activeFilter === "todos" ? sorted : sorted.filter((run) => run.circuit === activeFilter);
@@ -145,8 +178,18 @@ function render() {
     distance.className = "run-distance";
     distance.textContent = formatKm(run.distanceKm);
 
+    const actions = document.createElement("div");
+    actions.className = "run-actions";
+
+    const editButton = document.createElement("button");
+    editButton.className = "edit-button";
+    editButton.type = "button";
+    editButton.textContent = "Editar";
+    editButton.addEventListener("click", () => startEdit(run.id));
+
+    actions.append(distance, editButton);
     main.append(title, note);
-    item.append(badge, main, distance);
+    item.append(badge, main, actions);
     list.append(item);
   });
 }
@@ -167,6 +210,21 @@ async function createRun(run) {
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
     throw new Error(error.message || "No se pudo guardar");
+  }
+
+  return response.json();
+}
+
+async function updateRun(run) {
+  const response = await fetch(API_URL, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(run)
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || "No se pudo actualizar");
   }
 
   return response.json();
@@ -205,34 +263,42 @@ form.addEventListener("submit", async (event) => {
   }
 
   const run = {
-    id: crypto.randomUUID(),
+    id: editingRunId || crypto.randomUUID(),
     date: String(data.get("date")),
     distanceKm: Math.round(distanceKm * 10) / 10,
     durationMinutes: Math.round(durationMinutes),
     circuit: normalizeCircuit(String(data.get("circuit"))),
     note: String(data.get("note") || "").trim(),
-    createdAt: new Date().toISOString()
+    createdAt: runs.find((item) => item.id === editingRunId)?.createdAt || new Date().toISOString(),
+    updatedAt: editingRunId ? new Date().toISOString() : undefined
   };
 
-  const optimisticRuns = [run, ...runs];
+  const isEditing = Boolean(editingRunId);
+  const optimisticRuns = isEditing
+    ? runs.map((item) => item.id === run.id ? run : item)
+    : [run, ...runs];
   runs = optimisticRuns;
   saveLocal(runs);
   render();
-  form.reset();
-  dateInput.valueAsDate = new Date();
-  setStatus("Guardando...");
+  resetFormMode();
+  setStatus(isEditing ? "Actualizando..." : "Guardando...");
 
   try {
-    const result = await createRun(run);
+    const result = isEditing ? await updateRun(run) : await createRun(run);
     runs = result.runs || optimisticRuns;
     saveLocal(runs);
     setStatus("Sincronizado");
-    showToast("Salida guardada para todos.");
+    showToast(isEditing ? "Salida actualizada para todos." : "Salida guardada para todos.");
     render();
   } catch (error) {
     setStatus("Pendiente local", "error");
-    showToast("Quedo guardada en este dispositivo. Falta sincronizar GitHub.");
+    showToast(isEditing ? "El cambio quedo en este dispositivo. Falta sincronizar GitHub." : "Quedo guardada en este dispositivo. Falta sincronizar GitHub.");
   }
+});
+
+cancelEditButton.addEventListener("click", () => {
+  resetFormMode();
+  showToast("Edicion cancelada.");
 });
 
 filterTabs.forEach((tab) => {

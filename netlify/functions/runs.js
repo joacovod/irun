@@ -9,7 +9,7 @@ function json(statusCode, body) {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Allow-Methods": "GET,POST,OPTIONS"
+      "Access-Control-Allow-Methods": "GET,POST,PUT,OPTIONS"
     },
     body: JSON.stringify(body)
   };
@@ -79,7 +79,8 @@ function sanitizeRuns(value) {
       durationMinutes: Number(run.durationMinutes || 0),
       circuit: run.circuit === "montana" ? "montana" : "calle",
       note: String(run.note || "").slice(0, 90),
-      createdAt: String(run.createdAt || "")
+      createdAt: String(run.createdAt || ""),
+      updatedAt: String(run.updatedAt || "")
     }))
     .filter((run) => run.id && /^\d{4}-\d{2}-\d{2}$/.test(run.date) && Number.isFinite(run.distanceKm));
 }
@@ -183,6 +184,33 @@ exports.handler = async (event) => {
 
       await writeRuns(config, nextRuns, sha);
       return json(201, { runs: nextRuns });
+    }
+
+    if (event.httpMethod === "PUT") {
+      const payload = JSON.parse(event.body || "{}");
+      const result = validateRun(payload);
+
+      if (result.error) {
+        return json(400, { message: result.error });
+      }
+
+      const { runs, sha } = await readRuns(config);
+      const existing = runs.find((run) => run.id === result.run.id);
+
+      if (!existing) {
+        return json(404, { message: "No se encontro la salida para editar." });
+      }
+
+      const updatedRun = {
+        ...existing,
+        ...result.run,
+        createdAt: existing.createdAt || result.run.createdAt,
+        updatedAt: String(payload.updatedAt || new Date().toISOString())
+      };
+      const nextRuns = runs.map((run) => run.id === updatedRun.id ? updatedRun : run);
+
+      await writeRuns(config, nextRuns, sha);
+      return json(200, { runs: nextRuns });
     }
 
     return json(405, { message: "Metodo no permitido." });
