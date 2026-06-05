@@ -106,7 +106,9 @@ h2 {
 .cloud,
 .hill,
 .road,
-.runner {
+.trail-card,
+.trail-line,
+.checkpoint {
   position: absolute;
 }
 
@@ -189,55 +191,70 @@ h2 {
   background: #ffef91;
 }
 
-.runner {
-  bottom: 72px;
-  width: 34px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--pink);
-  box-shadow:
-    0 30px 0 -10px var(--ink),
-    13px 51px 0 -13px var(--ink),
-    -12px 53px 0 -13px var(--ink);
+.trail-card {
+  right: 8%;
+  bottom: 48px;
+  width: min(430px, 48%);
+  height: 132px;
+  border: 4px solid rgba(38, 50, 56, 0.12);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 18% 72%, rgba(38, 50, 56, 0.2) 0 4px, transparent 5px),
+    radial-gradient(circle at 36% 45%, rgba(38, 50, 56, 0.2) 0 4px, transparent 5px),
+    radial-gradient(circle at 58% 64%, rgba(38, 50, 56, 0.2) 0 4px, transparent 5px),
+    radial-gradient(circle at 82% 38%, rgba(38, 50, 56, 0.2) 0 4px, transparent 5px),
+    rgba(255, 253, 243, 0.42);
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.25);
 }
 
-.runner::before,
-.runner::after {
+.trail-line {
+  left: 42px;
+  right: 42px;
+  top: 62px;
+  height: 12px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, var(--pink), var(--blue), var(--sun));
+  transform: rotate(-8deg);
+}
+
+.checkpoint {
+  width: 42px;
+  aspect-ratio: 1;
+  border: 5px solid #fffdf3;
+  border-radius: 50%;
+  box-shadow: 0 8px 0 rgba(38, 50, 56, 0.18);
+}
+
+.checkpoint::after {
   position: absolute;
   content: "";
-  top: 42px;
-  width: 38px;
-  height: 8px;
+  left: 50%;
+  bottom: -18px;
+  width: 8px;
+  height: 18px;
+  transform: translateX(-50%);
   border-radius: 99px;
   background: var(--ink);
+  opacity: 0.18;
 }
 
-.runner::before {
-  left: -26px;
-  transform: rotate(-35deg);
+.checkpoint-one {
+  left: 42px;
+  top: 58px;
+  background: var(--pink);
 }
 
-.runner::after {
-  right: -27px;
-  transform: rotate(34deg);
-}
-
-.runner-a {
-  right: 31%;
-}
-
-.runner-b {
-  right: 20%;
-  bottom: 88px;
+.checkpoint-two {
+  left: 48%;
+  top: 30px;
   background: var(--blue);
-  transform: scale(0.82);
 }
 
-.runner-c {
-  right: 11%;
-  bottom: 64px;
+.checkpoint-three {
+  right: 44px;
+  top: 60px;
   background: var(--sun);
-  transform: scale(0.72);
 }
 
 .panel,
@@ -643,16 +660,35 @@ fieldset {
     width: 92%;
   }
 
-  .runner-a {
-    right: 46%;
+  .trail-card {
+    right: 12px;
+    bottom: 44px;
+    width: min(310px, calc(100% - 28px));
+    height: 112px;
   }
 
-  .runner-b {
-    right: 29%;
+  .trail-line {
+    left: 32px;
+    right: 32px;
+    top: 54px;
   }
 
-  .runner-c {
-    right: 13%;
+  .checkpoint {
+    width: 34px;
+  }
+
+  .checkpoint-one {
+    left: 30px;
+    top: 54px;
+  }
+
+  .checkpoint-two {
+    top: 26px;
+  }
+
+  .checkpoint-three {
+    right: 30px;
+    top: 56px;
   }
 
   .panel-heading,
