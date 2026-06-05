@@ -1,10 +1,21 @@
 [
   {
+    "id": "609c225d-2601-4a02-94ea-020556e0ffc7",
+    "date": "2026-06-05",
+    "distanceKm": 7,
+    "durationMinutes": 45,
+    "circuit": "calle",
+    "note": "",
+    "createdAt": "2026-06-05T20:29:24.873Z"
+  },
+  {
     "id": "fae1c444-6449-4cd3-9dec-28d244a43f74",
     "date": "2026-06-05",
     "distanceKm": 6,
+    "durationMinutes": 0,
     "circuit": "calle",
     "note": "",
-    "createdAt": "2026-06-03T22:29:16.432Z"
+    "createdAt": "2026-06-03T22:29:16.432Z",
+    "updatedAt": ""
   }
 ]
