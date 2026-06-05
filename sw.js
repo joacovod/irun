@@ -1,4 +1,4 @@
-const CACHE_NAME = "kilometros-en-equipo-v4";
+const CACHE_NAME = "kilometros-en-equipo-v5";
 const APP_SHELL = [
   "/",
   "/index.html",
