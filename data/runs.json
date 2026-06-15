@@ -1,12 +1,22 @@
 [
   {
+    "id": "31afd8bf-91f5-483f-8716-939a98a58c3e",
+    "date": "2026-06-15",
+    "distanceKm": 5,
+    "durationMinutes": 38,
+    "circuit": "montana",
+    "note": "",
+    "createdAt": "2026-06-15T19:08:41.764Z"
+  },
+  {
     "id": "f0bdd3de-146f-403d-bab9-f72ad1c6c488",
     "date": "2026-06-09",
     "distanceKm": 5,
     "durationMinutes": 38,
     "circuit": "montana",
     "note": "",
-    "createdAt": "2026-06-09T00:57:48.284Z"
+    "createdAt": "2026-06-09T00:57:48.284Z",
+    "updatedAt": ""
   },
   {
     "id": "609c225d-2601-4a02-94ea-020556e0ffc7",
