@@ -16,6 +16,7 @@ const filterTabs = Array.from(document.querySelectorAll(".filter-tab"));
 
 const API_URL = "/api/runs";
 const LOCAL_KEY = "kilometros-en-equipo:runs";
+const CAN_SYNC = window.location.protocol !== "file:";
 let runs = [];
 let activeFilter = "todos";
 let editingRunId = null;
@@ -234,6 +235,11 @@ async function init() {
   runs = loadLocal();
   render();
 
+  if (!CAN_SYNC) {
+    setStatus("Modo local", "error");
+    return;
+  }
+
   try {
     const remoteRuns = await fetchRuns();
     runs = remoteRuns.runs || [];
@@ -281,6 +287,13 @@ form.addEventListener("submit", async (event) => {
   saveLocal(runs);
   render();
   resetFormMode();
+
+  if (!CAN_SYNC) {
+    setStatus("Modo local", "error");
+    showToast(isEditing ? "Cambio guardado en este dispositivo." : "Salida guardada en este dispositivo.");
+    return;
+  }
+
   setStatus(isEditing ? "Actualizando..." : "Guardando...");
 
   try {

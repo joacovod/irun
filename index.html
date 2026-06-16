@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#1f9a8a">
+    <meta name="theme-color" content="#18a999">
     <title>Kilometros en Equipo</title>
-    <link rel="manifest" href="/manifest.webmanifest">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="styles.css?v=top-trail">
   </head>
   <body>
     <main class="app-shell">
@@ -15,20 +15,38 @@
           <div class="sun"></div>
           <div class="cloud cloud-one"></div>
           <div class="cloud cloud-two"></div>
+          <div class="kite"></div>
           <div class="hill hill-back"></div>
           <div class="hill hill-front"></div>
           <div class="road"></div>
           <div class="trail-card">
-            <span class="trail-line"></span>
-            <span class="checkpoint checkpoint-one"></span>
-            <span class="checkpoint checkpoint-two"></span>
-            <span class="checkpoint checkpoint-three"></span>
+            <svg class="trail-map" viewBox="0 0 520 180" aria-hidden="true">
+              <path class="trail-shadow" d="M30 130 C105 52 180 52 254 105 S395 158 490 42"></path>
+              <path class="trail-path" d="M30 118 C104 40 184 43 258 96 S397 147 490 34"></path>
+              <path class="trail-center" d="M54 105 C116 55 183 60 250 105 S379 132 463 51"></path>
+            </svg>
+            <span class="top-runner top-runner-one"></span>
+            <span class="top-runner top-runner-two"></span>
+            <span class="top-runner top-runner-three"></span>
           </div>
         </div>
         <div class="hero-copy">
-          <p class="eyebrow">Nuestro diario de aventuras</p>
+          <div class="brand-lockup" aria-label="Kilometros en Equipo">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 84 84" role="img">
+                <rect x="5" y="5" width="74" height="74" rx="18"></rect>
+                <circle class="mark-dot mark-dot-one" cx="24" cy="25" r="8"></circle>
+                <circle class="mark-dot mark-dot-two" cx="61" cy="25" r="8"></circle>
+                <path class="mark-route" d="M18 58c9-14 22-21 36-21 8 0 15 3 21 7"></path>
+                <path class="mark-ground" d="M14 63h57"></path>
+                <path class="mark-leg" d="M30 54l8-14 9 8 9-15"></path>
+                <circle class="mark-head" cx="56" cy="32" r="4"></circle>
+              </svg>
+            </span>
+            <span>i run</span>
+          </div>
           <h1 id="app-title">Kilometros en Equipo</h1>
-          <p>Guardamos cada salida, sumamos distancia y vemos por donde corrimos juntas.</p>
+          <p>Un mapa alegre para guardar salidas, sumar kilometros y celebrar cada vuelta del equipo.</p>
         </div>
       </section>
 
@@ -127,6 +145,6 @@
       </section>
     </main>
 
-    <script src="/app.js" defer></script>
+    <script src="app.js?v=top-trail" defer></script>
   </body>
 </html>
